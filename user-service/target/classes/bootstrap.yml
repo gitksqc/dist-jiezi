@@ -1,0 +1,31 @@
+url:
+  nacos: 192.168.56.101:8848
+
+spring:
+  application:
+    name: user-service #实例名
+  profiles:
+    active: d993e976-5d78-4c57-8ea3-83ad1719e05f
+  cloud:
+    nacos:
+      discovery:
+        #集群环境隔离
+        cluster-name: shanghai
+        #命名空间
+        namespace: ${spring.profiles.active}
+        #持久化实例 ture为临时实例 false为持久化实例  临时实例发生异常直接剔除, 而持久化实例等待恢复
+        ephemeral: true
+        #注册中心地址
+        server-addr: ${url.nacos}
+      config:
+        namespace: ${spring.profiles.active}
+        file-extension: yml
+        #配置中心地址
+        server-addr: ${url.nacos}
+        extension-configs[0]:
+          data-id: mysql-user.yml
+          group: DEFAULT_GROUP
+          refresh: false
+        # 共享配置
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
